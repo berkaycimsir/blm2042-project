@@ -1,20 +1,29 @@
-import { type AppType } from 'next/app';
-import { Inter } from 'next/font/google';
+// Import styles of packages that you've installed.
+// All packages except `@mantine/hooks` require styles imports
+import '@mantine/core/styles.css';
 
+import type { AppProps } from 'next/app';
+import { createTheme, MantineProvider } from '@mantine/core';
+import { Quicksand } from 'next/font/google';
 import { api } from '~/utils/api';
 
-import '~/styles/globals.css';
-
-const inter = Inter({
+const quicksand = Quicksand({
+  variable: '--quicksand',
   subsets: ['latin'],
+  weight: '500',
 });
 
-const MyApp: AppType = ({ Component, pageProps }) => {
-  return (
-    <main className={inter.className}>
-      <Component {...pageProps} />
-    </main>
-  );
-};
+const theme = createTheme({
+  focusRing: 'never',
+  fontFamily: quicksand.style.fontFamily,
+});
 
-export default api.withTRPC(MyApp);
+function App({ Component, pageProps }: AppProps) {
+  return (
+    <MantineProvider theme={theme}>
+      <Component {...pageProps} />
+    </MantineProvider>
+  );
+}
+
+export default api.withTRPC(App);
