@@ -6,11 +6,12 @@ import type { AppProps } from 'next/app';
 import { createTheme, MantineProvider } from '@mantine/core';
 import { Quicksand } from 'next/font/google';
 import { api } from '~/utils/api';
+import DashboardLayout from '~/layouts/dashboard';
 
 const quicksand = Quicksand({
   variable: '--quicksand',
   subsets: ['latin'],
-  weight: '500',
+  weight: '600',
 });
 
 const theme = createTheme({
@@ -18,7 +19,16 @@ const theme = createTheme({
   fontFamily: quicksand.style.fontFamily,
 });
 
-function App({ Component, pageProps }: AppProps) {
+function App({ Component, pageProps, router }: AppProps) {
+  if (router.pathname.includes('/dashboard')) {
+    return (
+      <MantineProvider theme={theme}>
+        <DashboardLayout>
+          <Component {...pageProps} />
+        </DashboardLayout>
+      </MantineProvider>
+    );
+  }
   return (
     <MantineProvider theme={theme}>
       <Component {...pageProps} />

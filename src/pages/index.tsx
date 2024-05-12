@@ -1,13 +1,50 @@
-import { AppShell, Group, Burger, Skeleton } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
-import { IconBrandMantine } from '@tabler/icons-react';
+import { Box, Button, Center, Group, TextInput } from '@mantine/core';
+import { useForm } from '@mantine/form';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+import React from 'react';
 
-import { api } from '~/utils/api';
+const allowedUsers: { username: string; password: string }[] = [
+  {
+    username: 'admin',
+    password: 'admin',
+  },
+  {
+    username: 'ahmet',
+    password: 'ahmet',
+  },
+];
 
 export default function Home() {
-  const hello = api.post.hello.useQuery({ text: 'from tRPC' });
-  const [opened, { toggle }] = useDisclosure();
+  const router = useRouter();
+
+  const form = useForm({
+    mode: 'uncontrolled',
+    initialValues: {
+      username: '',
+      password: '',
+    },
+
+    validate: {
+      username: (val) => val.length <= 0 && 'Username is required',
+      password: (val) => val.length <= 0 && 'Password is required',
+    },
+  });
+
+  const isValidUser = (values: (typeof form)['values']): boolean => {
+    return Boolean(
+      allowedUsers.find(
+        (user) =>
+          user.username === values.username && user.password === values.password
+      )
+    );
+  };
+
+  React.useEffect(() => {
+    if (localStorage.getItem('user')) {
+      router.push('/dashboard');
+    }
+  }, [router]);
 
   return (
     <>
@@ -17,40 +54,42 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <AppShell
-          header={{ height: 60 }}
-          navbar={{
-            width: 300,
-            breakpoint: 'sm',
-            collapsed: { mobile: !opened },
-          }}
-          padding="md"
-        >
-          <AppShell.Header>
-            <Group h="100%" px="md">
-              <Burger
-                opened={opened}
-                onClick={toggle}
-                hiddenFrom="sm"
-                size="sm"
-              />
-              <IconBrandMantine
-                size={30}
-                stroke={1.5}
-                color="var(--mantine-color-blue-filled)"
-              />
+        <Center w="100%" h="100vh">
+          <Box
+            w={300}
+            px="lg"
+            component="form"
+            onSubmit={form.onSubmit((values) => {
+              if (isValidUser(values)) {
+                router.push('/dashboard');
+                localStorage.setItem('user', values.username);
+              }
+            })}
+          >
+            <TextInput
+              withAsterisk
+              label="Username"
+              placeholder="your username"
+              key={form.key('username')}
+              {...form.getInputProps('username')}
+            />
+
+            <TextInput
+              pt="sm"
+              withAsterisk
+              label="Password"
+              placeholder="your password"
+              key={form.key('password')}
+              {...form.getInputProps('password')}
+            />
+
+            <Group pt="md">
+              <Button variant="light" color="indigo" fullWidth type="submit">
+                Login
+              </Button>
             </Group>
-          </AppShell.Header>
-          <AppShell.Navbar p="md">
-            Navbar
-            {Array(15)
-              .fill(0)
-              .map((_, index) => (
-                <Skeleton key={index} h={28} mt="sm" animate={false} />
-              ))}
-          </AppShell.Navbar>
-          <AppShell.Main>Main</AppShell.Main>
-        </AppShell>
+          </Box>
+        </Center>
       </main>
     </>
   );
