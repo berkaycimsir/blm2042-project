@@ -7,6 +7,8 @@ import { createTheme, MantineProvider } from '@mantine/core';
 import { Quicksand } from 'next/font/google';
 import { api } from '~/utils/api';
 import DashboardLayout from '~/layouts/dashboard';
+import '@mantine/notifications/styles.css';
+import { Notifications } from '@mantine/notifications';
 
 const quicksand = Quicksand({
   variable: '--quicksand',
@@ -23,6 +25,7 @@ function App({ Component, pageProps, router }: AppProps) {
   if (router.pathname.includes('/dashboard')) {
     return (
       <MantineProvider theme={theme}>
+        <Notifications />
         <DashboardLayout>
           <Component {...pageProps} />
         </DashboardLayout>
@@ -30,7 +33,8 @@ function App({ Component, pageProps, router }: AppProps) {
     );
   }
   return (
-    <MantineProvider theme={theme}>
+    <MantineProvider defaultColorScheme="dark" theme={theme}>
+      <Notifications />
       <Component {...pageProps} />
     </MantineProvider>
   );

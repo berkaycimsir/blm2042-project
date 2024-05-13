@@ -6,6 +6,9 @@ import {
   Space,
   Text,
   Button,
+  useMantineColorScheme,
+  useComputedColorScheme,
+  ActionIcon,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import {
@@ -15,6 +18,9 @@ import {
   IconBuildingStore,
   IconBuildingWarehouse,
   IconHome,
+  IconMoon,
+  IconMoonFilled,
+  IconSun,
   IconTir,
 } from '@tabler/icons-react';
 import Head from 'next/head';
@@ -39,7 +45,10 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
     if (!user) router.push('/');
     else setUser(user);
   }, [router]);
-
+  const { colorScheme, setColorScheme } = useMantineColorScheme();
+  const computedColorScheme = useComputedColorScheme('dark', {
+    getInitialValueInEffect: true,
+  });
   return (
     <>
       <Head>
@@ -73,66 +82,99 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
                 />
                 <Text>{user.toUpperCase()}</Text>
               </Group>
-
-              <Button onClick={onClick} color="red" variant="light">
-                Log out
-              </Button>
+              <ActionIcon
+                darkHidden
+                onClick={() =>
+                  setColorScheme(
+                    computedColorScheme === 'light' ? 'dark' : 'light'
+                  )
+                }
+                variant="default"
+                size="lg"
+                radius="md"
+                aria-label="Toggle color scheme"
+              >
+                <IconMoon size={19} stroke={1.5} />
+              </ActionIcon>
+              <ActionIcon
+                lightHidden
+                onClick={() =>
+                  setColorScheme(
+                    computedColorScheme === 'light' ? 'dark' : 'light'
+                  )
+                }
+                variant="default"
+                size="lg"
+                radius="md"
+                aria-label="Toggle color scheme"
+              >
+                <IconSun size={19} stroke={1.5} />
+              </ActionIcon>
             </Group>
           </AppShell.Header>
-          <AppShell.Navbar p="sm">
-            <NavLink
-              style={{ borderRadius: 6 }}
-              component={Link}
-              href="/dashboard"
-              label="Home"
-              leftSection={<IconHome size="1.2rem" stroke={2} />}
-              active={router.pathname === '/dashboard'}
-            />
-            <Space h="xs" />
-            <NavLink
-              style={{ borderRadius: 6 }}
-              component={Link}
-              href="/dashboard/orders"
-              label="Orders"
-              leftSection={<IconBuildingStore size="1.2rem" stroke={2} />}
-              active={router.pathname === '/dashboard/orders'}
-            />
-            <Space h="xs" />
-            <NavLink
-              style={{ borderRadius: 6 }}
-              component={Link}
-              href="/dashboard/materials"
-              label="Materials"
-              leftSection={<IconBuildingWarehouse size="1.2rem" stroke={2} />}
-              active={router.pathname === '/dashboard/materials'}
-            />
-            <Space h="xs" />
-            <NavLink
-              style={{ borderRadius: 6 }}
-              component={Link}
-              href="/dashboard/stock"
-              label="Stock"
-              leftSection={<IconBrandDatabricks size="1.2rem" stroke={2} />}
-              active={router.pathname === '/dashboard/stock'}
-            />
-            <Space h="xs" />
-            <NavLink
-              style={{ borderRadius: 6 }}
-              component={Link}
-              href="/dashboard/workshop"
-              label="Workshop"
-              leftSection={<IconBuildingFactory2 size="1.2rem" stroke={2} />}
-              active={router.pathname === '/dashboard/workshop'}
-            />
-            <Space h="xs" />
-            <NavLink
-              style={{ borderRadius: 6 }}
-              component={Link}
-              href="/dashboard/logistic"
-              label="Logistic"
-              leftSection={<IconTir size="1.2rem" stroke={2} />}
-              active={router.pathname === '/dashboard/logistic'}
-            />
+          <AppShell.Navbar
+            pb="lg"
+            style={{ justifyContent: 'space-between' }}
+            p="sm"
+          >
+            <AppShell.Section>
+              <NavLink
+                style={{ borderRadius: 6 }}
+                component={Link}
+                href="/dashboard"
+                label="Home"
+                leftSection={<IconHome size="1.2rem" stroke={2} />}
+                active={router.pathname === '/dashboard'}
+              />
+              <Space h="xs" />
+              <NavLink
+                style={{ borderRadius: 6 }}
+                component={Link}
+                href="/dashboard/orders"
+                label="Orders"
+                leftSection={<IconBuildingStore size="1.2rem" stroke={2} />}
+                active={router.pathname === '/dashboard/orders'}
+              />
+              <Space h="xs" />
+              <NavLink
+                style={{ borderRadius: 6 }}
+                component={Link}
+                href="/dashboard/materials"
+                label="Materials"
+                leftSection={<IconBuildingWarehouse size="1.2rem" stroke={2} />}
+                active={router.pathname === '/dashboard/materials'}
+              />
+              <Space h="xs" />
+              <NavLink
+                style={{ borderRadius: 6 }}
+                component={Link}
+                href="/dashboard/stock"
+                label="Stock"
+                leftSection={<IconBrandDatabricks size="1.2rem" stroke={2} />}
+                active={router.pathname === '/dashboard/stock'}
+              />
+              <Space h="xs" />
+              <NavLink
+                style={{ borderRadius: 6 }}
+                component={Link}
+                href="/dashboard/workshop"
+                label="Workshop"
+                leftSection={<IconBuildingFactory2 size="1.2rem" stroke={2} />}
+                active={router.pathname === '/dashboard/workshop'}
+              />
+              <Space h="xs" />
+              <NavLink
+                style={{ borderRadius: 6 }}
+                component={Link}
+                href="/dashboard/logistic"
+                label="Logistic"
+                leftSection={<IconTir size="1.2rem" stroke={2} />}
+                active={router.pathname === '/dashboard/logistic'}
+              />
+            </AppShell.Section>
+            <Button onClick={onClick} color="red" variant="light">
+              Log out
+            </Button>
           </AppShell.Navbar>
           <AppShell.Main>{children}</AppShell.Main>
         </AppShell>

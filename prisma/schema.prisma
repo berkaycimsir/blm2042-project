@@ -31,7 +31,10 @@ model Order {
   size           String
 
   count   Int
+  completed Boolean @default(false)
   shipped Boolean
+
+  shippedAt DateTime @default(now())
 
   machine   Machine @relation(fields: [machineId], references: [id])
   machineId Int
