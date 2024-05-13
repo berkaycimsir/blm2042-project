@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import {
   Badge,
   Box,
@@ -82,7 +83,7 @@ const Logistic = () => {
         )}
       </Table.Td>
       <Table.Td>
-        {order.shipped && dayjs(order.shippedAt as Date).format('LL')}
+        {order.shipped && dayjs(order.shippedAt).format('LL')}
       </Table.Td>
     </Table.Tr>
   ));

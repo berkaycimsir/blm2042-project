@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import {
   ActionIcon,
   Anchor,
@@ -157,7 +158,7 @@ export default function Home() {
         )}
       </Table.Td>
       <Table.Td>
-        {order.shipped && dayjs(order.shippedAt as Date).format('LL')}
+        {order.shipped && dayjs(order.shippedAt).format('LL')}
       </Table.Td>
     </Table.Tr>
   ));
